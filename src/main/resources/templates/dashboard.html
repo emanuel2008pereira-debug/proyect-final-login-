@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+
+<body>
+
+    <div class="app-shell">
+
+        <aside class="sidebar">
+
+            <div class="sidebar__brand">
+                Sistema de <span>Asistencia</span>
+            </div>
+
+            <nav class="sidebar__nav">
+                <a href="/asistencias">Asistencias</a>
+                <a href="/registrar-asistencia">Registrar Asistencia</a>
+                <a href="/alumnos">Alumnos</a>
+                <a th:if="${rol == 'ADMIN'}" href="/bitacora">Bitácora</a>
+                <a th:if="${rol == 'ADMIN'}" href="/usuarios">Gestión Usuarios</a>
+            </nav>
+
+            <div class="sidebar__footer">
+                <a th:href="@{/loginmvc}" class="btn btn-danger-ghost btn-block">Salir</a>
+            </div>
+
+        </aside>
+
+        <main class="main">
+
+            <div class="topbar">
+                <div>
+                    <h1 class="page-title">Dashboard</h1>
+                    <p class="page-subtitle">Resumen general del sistema</p>
+                </div>
+            </div>
+
+            <div class="stat-cards">
+
+                <div class="stat-card">
+                    <div class="stat-card__value" th:text="${totalAlumnos}">0</div>
+                    <div class="stat-card__label">Total de alumnos</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card__value" th:text="${totalAsistencias}">0</div>
+                    <div class="stat-card__label">Total asistencias</div>
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+    <script src="/js/dashboard.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar Asistencia</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+</head>
+
+<body>
+
+    <div class="app-shell">
+
+        <aside class="sidebar">
+
+            <div class="sidebar__brand">
+                Sistema de <span>Asistencia</span>
+            </div>
+
+            <nav class="sidebar__nav">
+                <a href="/asistencias">Asistencias</a>
+                <a href="/registrar-asistencia" class="active">Registrar Asistencia</a>
+                <a href="/alumnos">Alumnos</a>
+                <a href="/bitacora">Bitácora</a>
+                <a href="/usuarios">Gestión Usuarios</a>
+            </nav>
+
+            <div class="sidebar__footer">
+                <a th:href="@{/dashboard}" class="btn btn-ghost btn-block">Volver</a>
+            </div>
+
+        </aside>
+
+        <main class="main">
+
+            <div class="topbar">
+                <div>
+                    <h1 class="page-title">Registrar Asistencia</h1>
+                    <p class="page-subtitle">Escanea el carnet QR del alumno</p>
+                </div>
+            </div>
+
+            <div class="scanner-wrap">
+                <div id="reader"></div>
+                <div id="resultado" class="scan-result"></div>
+            </div>
+
+        </main>
+
+    </div>
+
+    <script>
+        const resultadoDiv = document.getElementById('resultado');
+        let procesando = false;
+
+        function mostrarResultado(mensaje, esExito) {
+            resultadoDiv.textContent = mensaje;
+            resultadoDiv.className = 'scan-result ' + (esExito ? 'exito' : 'error');
+        }
+
+        async function onScanSuccess(decodedText) {
+            if (procesando) return;
+            procesando = true;
+
+            try {
+                const response = await fetch('/api/asistencias/qr', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ carnet: decodedText })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    mostrarResultado('✔ Asistencia registrada: ' + data.alumno, true);
+                } else {
+                    mostrarResultado('✘ ' + data.mensaje, false);
+                }
+            } catch (error) {
+                mostrarResultado('✘ Error de conexión con el servidor', false);
+            }
+
+            setTimeout(() => { procesando = false; }, 2500);
+        }
+
+        const html5QrCode = new Html5Qrcode("reader");
+        html5QrCode.start(
+            { facingMode: "environment" },
+            { fps: 10, qrbox: 250 },
+            onScanSuccess
+        ).catch(err => {
+            mostrarResultado('No se pudo acceder a la cámara: ' + err, false);
+        });
+    </script>
+
+</body>
+</html>

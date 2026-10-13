@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Asistencias</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+
+<body>
+
+    <div class="app-shell">
+
+        <aside class="sidebar">
+
+            <div class="sidebar__brand">
+                Sistema de <span>Asistencia</span>
+            </div>
+
+            <nav class="sidebar__nav">
+                <a href="/asistencias" class="active">Asistencias</a>
+                <a href="/registrar-asistencia">Registrar Asistencia</a>
+                <a href="/alumnos">Alumnos</a>
+                <a href="/bitacora">Bitácora</a>
+                <a href="/usuarios">Gestión Usuarios</a>
+            </nav>
+
+            <div class="sidebar__footer">
+                <a href="/dashboard" class="btn btn-ghost btn-block">Salir</a>
+            </div>
+
+        </aside>
+
+        <main class="main">
+
+            <div class="topbar">
+                <div>
+                    <h1 class="page-title">Control de Asistencia</h1>
+                    <p class="page-subtitle">Registro manual y listado general</p>
+                </div>
+            </div>
+
+            <div class="panel">
+
+                <div class="panel__title">Registrar manualmente</div>
+
+                <form action="/guardar-asistencia" method="post">
+
+                    <div class="form-grid">
+
+                        <div>
+                            <label>Alumno</label>
+                            <input type="text" name="alumno" placeholder="Nombre del alumno" required>
+                        </div>
+
+                        <div>
+                            <label>Estado</label>
+                            <select name="estado">
+                                <option value="Presente">Presente</option>
+                                <option value="Ausente">Ausente</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="margin-top:18px;">
+                        Guardar Asistencia
+                    </button>
+
+                </form>
+
+            </div>
+
+            <div class="table-wrap">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Alumno</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr th:each="asistencia : ${listaAsistencias}">
+
+                            <td th:text="${asistencia.id}"></td>
+                            <td th:text="${asistencia.alumno}"></td>
+
+                            <td>
+                                <span th:if="${asistencia.estado == 'Presente'}" class="badge badge-presente" th:text="${asistencia.estado}"></span>
+                                <span th:if="${asistencia.estado == 'Ausente'}" class="badge badge-ausente" th:text="${asistencia.estado}"></span>
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </main>
+
+    </div>
+
+</body>
+</html>

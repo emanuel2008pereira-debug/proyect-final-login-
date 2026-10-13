@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Bitácora</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+
+<body>
+
+    <div class="app-shell">
+
+        <aside class="sidebar">
+
+            <div class="sidebar__brand">
+                Sistema de <span>Asistencia</span>
+            </div>
+
+            <nav class="sidebar__nav">
+                <a href="/asistencias">Asistencias</a>
+                <a href="/registrar-asistencia">Registrar Asistencia</a>
+                <a href="/alumnos">Alumnos</a>
+                <a href="/bitacora" class="active">Bitácora</a>
+                <a href="/usuarios">Gestión Usuarios</a>
+            </nav>
+
+            <div class="sidebar__footer">
+                <a href="/dashboard" class="btn btn-ghost btn-block">Volver</a>
+            </div>
+
+        </aside>
+
+        <main class="main">
+
+            <div class="topbar">
+                <div>
+                    <h1 class="page-title">Bitácora del Sistema</h1>
+                    <p class="page-subtitle">Historial de acciones registradas</p>
+                </div>
+            </div>
+
+            <div class="table-wrap">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Usuario</th>
+                            <th>Acción</th>
+                            <th>Fecha</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr th:each="b : ${listaBitacora}">
+                            <td th:text="${b.id}"></td>
+                            <td th:text="${b.usuario}"></td>
+                            <td th:text="${b.accion}"></td>
+                            <td th:text="${b.fecha}"></td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </main>
+
+    </div>
+
+</body>
+</html>

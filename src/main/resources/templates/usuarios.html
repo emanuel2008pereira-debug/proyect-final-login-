@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión Usuarios</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+
+<body>
+
+    <div class="app-shell">
+
+        <aside class="sidebar">
+
+            <div class="sidebar__brand">
+                Sistema de <span>Asistencia</span>
+            </div>
+
+            <nav class="sidebar__nav">
+                <a href="/asistencias">Asistencias</a>
+                <a href="/registrar-asistencia">Registrar Asistencia</a>
+                <a href="/alumnos">Alumnos</a>
+                <a href="/bitacora">Bitácora</a>
+                <a href="/usuarios" class="active">Gestión Usuarios</a>
+            </nav>
+
+            <div class="sidebar__footer">
+                <a th:href="@{/dashboard}" class="btn btn-ghost btn-block">Volver</a>
+            </div>
+
+        </aside>
+
+        <main class="main">
+
+            <div class="topbar">
+                <div>
+                    <h1 class="page-title">Gestión de Usuarios</h1>
+                    <p class="page-subtitle">Administración de accesos al sistema</p>
+                </div>
+            </div>
+
+            <div class="panel" style="max-width:420px;">
+
+                <div class="panel__title">Nuevo usuario</div>
+
+                <form action="/guardar-usuario" method="post">
+
+                    <label>Usuario</label>
+                    <input type="text" name="usuario" placeholder="Usuario" required style="margin-bottom:16px;">
+
+                    <label>Contraseña</label>
+                    <input type="password" name="password" placeholder="Contraseña" required>
+
+                    <button type="submit" class="btn btn-primary btn-block" style="margin-top:20px;">
+                        Guardar Usuario
+                    </button>
+
+                </form>
+
+            </div>
+
+        </main>
+
+    </div>
+
+</body>
+</html>

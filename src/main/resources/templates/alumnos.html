@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Alumnos</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+
+<body>
+
+    <div class="app-shell">
+
+        <aside class="sidebar">
+
+            <div class="sidebar__brand">
+                Sistema de <span>Asistencia</span>
+            </div>
+
+            <nav class="sidebar__nav">
+                <a href="/asistencias">Asistencias</a>
+                <a href="/registrar-asistencia">Registrar Asistencia</a>
+                <a href="/alumnos" class="active">Alumnos</a>
+                <a th:if="${rol == 'ADMIN'}" href="/bitacora">Bitácora</a>
+                <a th:if="${rol == 'ADMIN'}" href="/usuarios">Gestión Usuarios</a>
+            </nav>
+
+            <div class="sidebar__footer">
+                <a href="/dashboard" class="btn btn-ghost btn-block">Salir</a>
+            </div>
+
+        </aside>
+
+        <main class="main">
+
+            <div class="topbar">
+                <div>
+                    <h1 class="page-title">Alumnos</h1>
+                    <p class="page-subtitle">Lista de alumnos registrados</p>
+                </div>
+            </div>
+
+            <div class="panel" th:if="${rol == 'ADMIN'}">
+
+                <div class="panel__title">Agregar alumno</div>
+
+                <form action="/guardar-alumno" method="post">
+
+                    <div class="form-grid">
+
+                        <div>
+                            <label>Nombre</label>
+                            <input type="text" name="nombre" placeholder="Nombre" required>
+                        </div>
+
+                        <div>
+                            <label>Apellido</label>
+                            <input type="text" name="apellido" placeholder="Apellido" required>
+                        </div>
+
+                        <div>
+                            <label>Correo</label>
+                            <input type="email" name="correo" placeholder="Correo" required>
+                        </div>
+
+                        <div>
+                            <label>Teléfono</label>
+                            <input type="text" name="telefono" placeholder="Teléfono" required>
+                        </div>
+
+                        <div>
+                            <label>Usuario</label>
+                            <input type="text" name="usuario" placeholder="Usuario" required>
+                        </div>
+
+                        <div>
+                            <label>Carnet</label>
+                            <input type="text" name="carnet" placeholder="Carnet" required>
+                        </div>
+
+                        <div>
+                            <label>Grado</label>
+                            <input type="text" name="grado" placeholder="Grado" required>
+                        </div>
+
+                        <div>
+                            <label>Sección</label>
+                            <input type="text" name="seccion" placeholder="Sección" required>
+                        </div>
+
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="margin-top:18px;">
+                        Guardar Alumno
+                    </button>
+
+                </form>
+
+            </div>
+
+            <!-- BARRA DE BUSQUEDA -->
+
+            <div class="search-bar">
+
+                <div class="search-field">
+
+                    <svg class="search-field__icon" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="7"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+
+                    <input type="text"
+                           id="buscador"
+                           placeholder="Buscar por nombre, carnet, grado, sección..."
+                           autocomplete="off">
+
+                    <button type="button"
+                            id="limpiarBusqueda"
+                            class="search-field__clear"
+                            aria-label="Limpiar búsqueda">&times;</button>
+
+                </div>
+
+                <span class="search-count" id="contador"></span>
+
+            </div>
+
+            <div class="table-wrap">
+
+                <table id="tablaAlumnos">
+
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Correo</th>
+                            <th>Teléfono</th>
+                            <th>Usuario</th>
+                            <th>Carnet</th>
+                            <th>Grado</th>
+                            <th>Sección</th>
+                            <th>QR</th>
+                            <th th:if="${rol == 'ADMIN'}">Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr th:each="alumno : ${listaAlumnos}"
+                            th:data-buscar="${alumno.nombre + ' ' + alumno.apellido + ' ' + alumno.correo + ' ' + alumno.telefono + ' ' + alumno.usuario + ' ' + alumno.carnet + ' ' + alumno.grado + ' ' + alumno.seccion}">
+
+                            <td th:text="${alumno.id}"></td>
+                            <td th:text="${alumno.nombre}"></td>
+                            <td th:text="${alumno.apellido}"></td>
+                            <td th:text="${alumno.correo}"></td>
+                            <td th:text="${alumno.telefono}"></td>
+                            <td th:text="${alumno.usuario}"></td>
+                            <td th:text="${alumno.carnet}"></td>
+                            <td th:text="${alumno.grado}"></td>
+                            <td th:text="${alumno.seccion}"></td>
+
+                            <td>
+                                <a th:href="@{/alumnos/qr/{carnet}(carnet=${alumno.carnet})}" target="_blank">
+                                    <img class="qr-thumb" th:src="@{/alumnos/qr/{carnet}(carnet=${alumno.carnet})}" alt="QR">
+                                </a>
+                                <br>
+                                <a class="qr-link" th:href="@{/alumnos/qr/{carnet}(carnet=${alumno.carnet})}" target="_blank">
+                                    Ver / Imprimir
+                                </a>
+                            </td>
+
+                            <td th:if="${rol == 'ADMIN'}" class="table-actions">
+                                <a class="edit" th:href="@{/editar-alumno/{id}(id=${alumno.id})}">Editar</a>
+                                <a class="delete" th:href="@{/eliminar-alumno/{id}(id=${alumno.id})}">Eliminar</a>
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+                <div class="no-results" id="sinResultados">
+                    No se encontraron alumnos con esa búsqueda.
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+    <script>
+        const buscador = document.getElementById('buscador');
+        const botonLimpiar = document.getElementById('limpiarBusqueda');
+        const contador = document.getElementById('contador');
+        const sinResultados = document.getElementById('sinResultados');
+        const filas = document.querySelectorAll('#tablaAlumnos tbody tr');
+        const total = filas.length;
+
+        function normalizar(texto) {
+            return (texto || '')
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '');
+        }
+
+        function filtrar() {
+            const palabras = normalizar(buscador.value.trim())
+                .split(/\s+/)
+                .filter(Boolean);
+
+            let visibles = 0;
+
+            filas.forEach(fila => {
+                const texto = normalizar(fila.dataset.buscar);
+                const coincide = palabras.every(p => texto.includes(p));
+                fila.style.display = coincide ? '' : 'none';
+                if (coincide) visibles++;
+            });
+
+            botonLimpiar.style.display = buscador.value ? 'block' : 'none';
+            sinResultados.style.display = (visibles === 0 && total > 0) ? 'block' : 'none';
+            contador.textContent = palabras.length
+                ? 'Mostrando ' + visibles + ' de ' + total
+                : total + ' alumnos';
+        }
+
+        buscador.addEventListener('input', filtrar);
+
+        buscador.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                buscador.value = '';
+                filtrar();
+            }
+        });
+
+        botonLimpiar.addEventListener('click', () => {
+            buscador.value = '';
+            filtrar();
+            buscador.focus();
+        });
+
+        filtrar();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Alumno</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+
+<body>
+
+    <div class="edit-page">
+
+        <div class="edit-card">
+
+            <h1>Editar Alumno</h1>
+
+            <form action="/guardar-alumno" method="post">
+
+                <input type="hidden" name="id" th:value="${alumno.id}">
+
+                <input type="text" name="nombre" th:value="${alumno.nombre}" placeholder="Nombre" required>
+                <input type="text" name="apellido" th:value="${alumno.apellido}" placeholder="Apellido" required>
+                <input type="email" name="correo" th:value="${alumno.correo}" placeholder="Correo" required>
+                <input type="text" name="telefono" th:value="${alumno.telefono}" placeholder="Teléfono" required>
+                <input type="text" name="usuario" th:value="${alumno.usuario}" placeholder="Usuario" required>
+                <input type="text" name="carnet" th:value="${alumno.carnet}" placeholder="Carnet" required>
+                <input type="text" name="grado" th:value="${alumno.grado}" placeholder="Grado" required>
+                <input type="text" name="seccion" th:value="${alumno.seccion}" placeholder="Sección" required>
+
+                <button type="submit" class="btn btn-primary btn-block" style="margin-top:8px;">
+                    Actualizar Alumno
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
