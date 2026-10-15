@@ -1,33 +1,37 @@
-HELP.md
+# Compilado
 target/
-.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
+# Credenciales y configuración local
+src/main/resources/application-local.properties
+application-*.properties
+.env
+.env.*
+*.env
+secrets/
+credentials.*
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
+# Llaves y certificados
+*.pem
+*.key
+*.jks
+*.p12
+*.pfx
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+# Logs
+*.log
+
+# NetBeans
+nbproject/private/
 build/
-!**/src/main/**/build/
-!**/src/test/**/build/
+nbbuild/
+dist/
+nbdist/
 
-### VS Code ###
+# Otros IDEs
+.idea/
+*.iml
 .vscode/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
