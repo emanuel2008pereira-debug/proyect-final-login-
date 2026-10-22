@@ -561,3 +561,27 @@ tbody tr:hover{
     font-size:14.5px;
     border-top:1px solid var(--border);
 }
+
+/* ===== REPORTES ===== */
+
+input[type="date"]{
+    color-scheme:dark;
+}
+
+.badge-temprano{ background:rgba(91,155,213,0.14); color:#5B9BD5; }
+.badge-puntual{ background:var(--success-soft); color:var(--success); }
+.badge-tarde{ background:rgba(226,128,58,0.14); color:#E2803A; }
+
+.section-title{
+    font-family:var(--font-heading);
+    font-size:20px;
+    font-weight:700;
+    margin:0 0 14px;
+}
+
+.empty-note{
+    padding:28px 20px;
+    text-align:center;
+    color:var(--text-muted);
+    font-size:14.5px;
+}
