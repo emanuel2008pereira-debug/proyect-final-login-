@@ -21,6 +21,7 @@ public class Asistencia {
     private Long alumnoId;
     private LocalDate fecha;
     private LocalDateTime hora;
+    private String puntualidad;
 
     public Asistencia() {
     }
@@ -71,5 +72,13 @@ public class Asistencia {
 
     public void setHora(LocalDateTime hora) {
         this.hora = hora;
+    }
+
+    public String getPuntualidad() {
+        return puntualidad;
+    }
+
+    public void setPuntualidad(String puntualidad) {
+        this.puntualidad = puntualidad;
     }
 }
