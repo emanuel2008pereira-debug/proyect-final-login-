@@ -22,13 +22,14 @@
             <nav class="sidebar__nav">
                 <a href="/asistencias">Asistencias</a>
                 <a href="/registrar-asistencia">Registrar Asistencia</a>
+                <a href="/reportes">Reportes</a>
                 <a href="/alumnos">Alumnos</a>
                 <a th:if="${rol == 'ADMIN'}" href="/bitacora">Bitácora</a>
                 <a th:if="${rol == 'ADMIN'}" href="/usuarios">Gestión Usuarios</a>
             </nav>
 
             <div class="sidebar__footer">
-                <a th:href="@{/loginmvc}" class="btn btn-danger-ghost btn-block">Salir</a>
+                <a th:href="@{/logout}" class="btn btn-danger-ghost btn-block">Cerrar sesión</a>
             </div>
 
         </aside>

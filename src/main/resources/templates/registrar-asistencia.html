@@ -22,9 +22,10 @@
             <nav class="sidebar__nav">
                 <a href="/asistencias">Asistencias</a>
                 <a href="/registrar-asistencia" class="active">Registrar Asistencia</a>
+                <a href="/reportes">Reportes</a>
                 <a href="/alumnos">Alumnos</a>
-                <a href="/bitacora">Bitácora</a>
-                <a href="/usuarios">Gestión Usuarios</a>
+                <a th:if="${rol == 'ADMIN'}" href="/bitacora">Bitácora</a>
+                <a th:if="${rol == 'ADMIN'}" href="/usuarios">Gestión Usuarios</a>
             </nav>
 
             <div class="sidebar__footer">
@@ -70,12 +71,17 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ carnet: decodedText })
                 });
-                const data = await response.json();
 
-                if (data.success) {
-                    mostrarResultado('✔ Asistencia registrada: ' + data.alumno, true);
+                if (response.status === 401) {
+                    mostrarResultado('✘ Tu sesión expiró, inicia sesión de nuevo', false);
                 } else {
-                    mostrarResultado('✘ ' + data.mensaje, false);
+                    const data = await response.json();
+
+                    if (data.success) {
+                        mostrarResultado('✔ ' + data.alumno + ' llegó ' + data.llegada.toLowerCase(), true);
+                    } else {
+                        mostrarResultado('✘ ' + data.mensaje, false);
+                    }
                 }
             } catch (error) {
                 mostrarResultado('✘ Error de conexión con el servidor', false);

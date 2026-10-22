@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+
+<body>
+
+    <div class="app-shell">
+
+        <aside class="sidebar">
+
+            <div class="sidebar__brand">
+                Sistema de <span>Asistencia</span>
+            </div>
+
+            <nav class="sidebar__nav">
+                <a href="/asistencias">Asistencias</a>
+                <a href="/registrar-asistencia">Registrar Asistencia</a>
+                <a href="/reportes" class="active">Reportes</a>
+                <a href="/alumnos">Alumnos</a>
+                <a th:if="${rol == 'ADMIN'}" href="/bitacora">Bitácora</a>
+                <a th:if="${rol == 'ADMIN'}" href="/usuarios">Gestión Usuarios</a>
+            </nav>
+
+            <div class="sidebar__footer">
+                <a th:href="@{/dashboard}" class="btn btn-ghost btn-block">Volver</a>
+            </div>
+
+        </aside>
+
+        <main class="main">
+
+            <div class="topbar">
+                <div>
+                    <h1 class="page-title">Reportes</h1>
+                    <p class="page-subtitle">Puntualidad y asistencia por alumno</p>
+                </div>
+            </div>
+
+            <div class="stat-cards" style="margin-bottom:28px;">
+
+                <div class="stat-card">
+                    <div class="stat-card__value" th:text="${totalRegistros}">0</div>
+                    <div class="stat-card__label">Registros</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card__value" th:text="${totalTemprano}">0</div>
+                    <div class="stat-card__label">Llegaron temprano</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card__value" th:text="${totalPuntual}">0</div>
+                    <div class="stat-card__label">Llegaron puntual</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card__value" th:text="${totalTarde}">0</div>
+                    <div class="stat-card__label">Llegaron tarde</div>
+                </div>
+
+            </div>
+
+            <div class="panel">
+
+                <div class="panel__title">Filtros</div>
+
+                <form th:action="@{/reportes}" method="get">
+
+                    <div class="form-grid">
+
+                        <div>
+                            <label>Desde</label>
+                            <input type="date" name="desde" th:value="${filtroDesde}">
+                        </div>
+
+                        <div>
+                            <label>Hasta</label>
+                            <input type="date" name="hasta" th:value="${filtroHasta}">
+                        </div>
+
+                        <div>
+                            <label>Alumno</label>
+                            <input type="text" name="alumno" placeholder="Nombre del alumno"
+                                   th:value="${filtroAlumno}" autocomplete="off">
+                        </div>
+
+                        <div>
+                            <label>Estado</label>
+                            <select name="estado">
+                                <option value="">Todos</option>
+                                <option value="Presente" th:selected="${filtroEstado == 'Presente'}">Presente</option>
+                                <option value="Ausente" th:selected="${filtroEstado == 'Ausente'}">Ausente</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label>Llegada</label>
+                            <select name="llegada">
+                                <option value="">Todas</option>
+                                <option value="Temprano" th:selected="${filtroLlegada == 'Temprano'}">Temprano</option>
+                                <option value="Puntual" th:selected="${filtroLlegada == 'Puntual'}">Puntual</option>
+                                <option value="Tarde" th:selected="${filtroLlegada == 'Tarde'}">Tarde</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div style="display:flex; gap:12px; margin-top:18px; flex-wrap:wrap;">
+                        <button type="submit" class="btn btn-primary">Filtrar</button>
+                        <a th:href="@{/reportes}" class="btn btn-ghost">Limpiar</a>
+                    </div>
+
+                </form>
+
+            </div>
+
+            <h2 class="section-title">Totales por alumno</h2>
+
+            <div class="table-wrap" style="margin-bottom:28px;">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Alumno</th>
+                            <th>Registros</th>
+                            <th>Temprano</th>
+                            <th>Puntual</th>
+                            <th>Tarde</th>
+                            <th>Presentes</th>
+                            <th>Ausentes</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr th:each="r : ${resumenAlumnos}">
+                            <td th:text="${r.alumno}"></td>
+                            <td th:text="${r.total}"></td>
+                            <td th:text="${r.temprano}"></td>
+                            <td th:text="${r.puntual}"></td>
+                            <td th:text="${r.tarde}"></td>
+                            <td th:text="${r.presentes}"></td>
+                            <td th:text="${r.ausentes}"></td>
+                        </tr>
+                    </tbody>
+
+                </table>
+
+                <div class="empty-note" th:if="${#lists.isEmpty(resumenAlumnos)}">
+                    No hay registros con esos filtros.
+                </div>
+
+            </div>
+
+            <h2 class="section-title">Detalle de registros</h2>
+
+            <div class="table-wrap">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Alumno</th>
+                            <th>Estado</th>
+                            <th>Llegada</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr th:each="a : ${listaReporte}">
+
+                            <td th:text="${a.fecha != null} ? ${#temporals.format(a.fecha, 'dd/MM/yyyy')} : '—'"></td>
+                            <td th:text="${a.hora != null} ? ${#temporals.format(a.hora, 'HH:mm:ss')} : '—'"></td>
+                            <td th:text="${a.alumno}"></td>
+
+                            <td>
+                                <span th:if="${a.estado == 'Presente'}" class="badge badge-presente" th:text="${a.estado}"></span>
+                                <span th:if="${a.estado == 'Ausente'}" class="badge badge-ausente" th:text="${a.estado}"></span>
+                            </td>
+
+                            <td>
+                                <span th:if="${a.puntualidad == 'Temprano'}" class="badge badge-temprano">Temprano</span>
+                                <span th:if="${a.puntualidad == 'Puntual'}" class="badge badge-puntual">Puntual</span>
+                                <span th:if="${a.puntualidad == 'Tarde'}" class="badge badge-tarde">Tarde</span>
+                                <span th:if="${a.puntualidad == null}">—</span>
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+                <div class="empty-note" th:if="${#lists.isEmpty(listaReporte)}">
+                    No hay registros con esos filtros.
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+</body>
+</html>
