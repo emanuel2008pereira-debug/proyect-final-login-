@@ -58,6 +58,7 @@ public class AsistenciaController {
             respuesta.put("success", true);
             respuesta.put("alumno", asistencia.getAlumno());
             respuesta.put("hora", asistencia.getHora().toString());
+            respuesta.put("llegada", asistencia.getPuntualidad());
             return ResponseEntity.ok(respuesta);
 
         } catch (RuntimeException e) {
