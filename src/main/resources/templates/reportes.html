@@ -7,6 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reportes</title>
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/print.css}" media="print">
+    <style>
+        .print-header{ display:none; }
+    </style>
 </head>
 
 <body>
@@ -41,6 +45,31 @@
                     <h1 class="page-title">Reportes</h1>
                     <p class="page-subtitle">Puntualidad y asistencia por alumno</p>
                 </div>
+
+                <button type="button" class="btn btn-primary no-print" onclick="window.print()">
+                    Imprimir / Guardar PDF
+                </button>
+            </div>
+
+            <div class="print-header">
+                <h1>Reporte de asistencia</h1>
+                <p>Sistema de Asistencia. Generado el <span id="fechaImpresion"></span></p>
+                <p>
+                    <strong>Desde:</strong>
+                    <span th:text="${filtroDesde != null} ? ${#temporals.format(filtroDesde, 'dd/MM/yyyy')} : 'Sin límite'"></span>
+                    &nbsp;&nbsp;
+                    <strong>Hasta:</strong>
+                    <span th:text="${filtroHasta != null} ? ${#temporals.format(filtroHasta, 'dd/MM/yyyy')} : 'Sin límite'"></span>
+                    &nbsp;&nbsp;
+                    <strong>Alumno:</strong>
+                    <span th:text="${#strings.isEmpty(filtroAlumno)} ? 'Todos' : ${filtroAlumno}"></span>
+                    &nbsp;&nbsp;
+                    <strong>Estado:</strong>
+                    <span th:text="${#strings.isEmpty(filtroEstado)} ? 'Todos' : ${filtroEstado}"></span>
+                    &nbsp;&nbsp;
+                    <strong>Llegada:</strong>
+                    <span th:text="${#strings.isEmpty(filtroLlegada)} ? 'Todas' : ${filtroLlegada}"></span>
+                </p>
             </div>
 
             <div class="stat-cards" style="margin-bottom:28px;">
@@ -67,7 +96,7 @@
 
             </div>
 
-            <div class="panel">
+            <div class="panel no-print">
 
                 <div class="panel__title">Filtros</div>
 
@@ -210,6 +239,15 @@
         </main>
 
     </div>
+
+    <script>
+        function ponerFecha() {
+            document.getElementById('fechaImpresion').textContent =
+                new Date().toLocaleString('es-SV', { dateStyle: 'long', timeStyle: 'short' });
+        }
+        window.addEventListener('beforeprint', ponerFecha);
+        ponerFecha();
+    </script>
 
 </body>
 </html>
